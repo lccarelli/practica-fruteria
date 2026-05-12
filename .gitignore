@@ -1,0 +1,11 @@
+.DS_Store
+.idea/
+.vscode/
+.claude/
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.iml
+*.pdf
