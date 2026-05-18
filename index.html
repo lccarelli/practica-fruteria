@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda de frutas</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header">
+
+        <a href="index.html">
+            <div class="logo">Frutería</div>
+        </a>
+        
+        <nav class="nombreAlumno"></nav>
+
+        <input type="text" id="barra-buscar" name="busqueda" placeholder="Buscar..." class="barra-busqueda" aria-label="Buscar">
+
+        <!-- Botón para abrir el dialog de historial de pedidos (EXTRA) -->
+        <button id="btn-historial">Mis pedidos (<span id="contador-pedidos">0</span>)</button>
+
+        <div class="carrito">
+            <span>Carrito: <span id="contador-carrito">0</span> productos</span>
+        </div>
+    </header>
+
+    
+    <!-- Contenedor principal -->
+    <main>
+		<section class="seccion-productos">
+		    <h2>Nuestras frutas</h2>
+		    <!-- (EJ 8) Botones de ordenamiento. El atributo data-orden identifica
+		         qué tipo de ordenamiento querés disparar al clickearlos. -->
+		    <div class="controles-orden">
+		        <button data-orden="nombre-asc">Ordenar por nombre A-Z</button>
+		        <button data-orden="nombre-desc">Ordenar por nombre Z-A</button>
+		        <button data-orden="precio-asc">Ordenar por menor precio</button>
+		        <button data-orden="precio-desc">Ordenar por mayor precio</button>
+		    </div>
+		    <div class="contenedor-productos"></div>
+		</section>
+
+
+		<!-- Seccion carrito -->
+		<section class="seccion-carrito">
+		    <h2>Carrito</h2>
+
+		    <div id="items-carrito">
+		        <p>No hay elementos en el carrito.</p>
+		    </div>
+
+		    <div class="total-carrito">
+		        <p>Total: <span id="precio-total">$0.00</span></p>
+		        <!-- Botón para vaciar todo el carrito (EJ 9).
+		             Empieza oculto (hidden); el JS lo muestra cuando hay productos. -->
+		        <button id="btn-vaciar" class="hidden">Vaciar carrito</button>
+		        <!-- Botón para realizar el pedido (EXTRA).
+		             También oculto hasta que haya productos. -->
+		        <button id="btn-realizar-pedido" class="hidden">Realizar pedido</button>
+		    </div>
+		</section>
+
+        <!-- Dialog para mostrar el ticket del pedido (EXTRA).
+             <dialog> es el modal nativo HTML5: showModal() para abrir,
+             close() para cerrar, ::backdrop para el fondo oscuro,
+             Escape cierra automáticamente y maneja el foco. -->
+        <dialog id="dialog-ticket">
+            <div id="contenido-ticket">
+                <!-- Lo llenamos desde JS al realizar el pedido -->
+            </div>
+            <button id="btn-cerrar-ticket">Cerrar</button>
+        </dialog>
+
+        <!-- Dialog para mostrar el historial de pedidos (EXTRA).
+             Contiene la lista de pedidos con sus acciones (ver/editar/eliminar). -->
+        <dialog id="dialog-historial">
+            <h2 class="dialog-titulo">Mis pedidos</h2>
+            <div id="lista-pedidos">
+                <!-- Lo llenamos desde JS al abrir el dialog -->
+            </div>
+            <button id="btn-cerrar-historial">Cerrar</button>
+        </dialog>
+
+    </main>
+    <script src="js/main.js"></script>
+</body>
+</html>

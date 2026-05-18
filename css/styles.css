@@ -1,0 +1,552 @@
+/* ============================================
+   EJERCICIO 10 — Estilos generales de la fruteria
+   ============================================
+   Replicamos el diseño de sample.png:
+   - Header verde con texto blanco (logo izq, nombre, buscador, carrito der).
+   - Grilla de tarjetas de producto.
+   - Sección carrito con fondo gris claro, items con botón Eliminar rojo.
+   - Total alineado a la derecha abajo.
+
+   Convenciones:
+   - Usamos variables CSS (custom properties) para los colores.
+   - Mobile-first: los estilos base son para pantallas chicas, y vamos
+     agregando reglas con @media (min-width: ...) para más grandes.
+   - box-sizing: border-box en todo, para que el padding/border NO sumen
+     al ancho del elemento (evita dolores de cabeza).
+*/
+
+/* ============================================
+   VARIABLES (custom properties)
+   ============================================
+   Definimos los colores y medidas una sola vez acá, y los reusamos abajo.
+   Si querés cambiar el verde de toda la app, cambiás --verde y listo. */
+:root {
+    --verde: #2e8b57;          /* color principal: header y botones */
+    --verde-oscuro: #246e45;   /* hover de los botones verdes */
+    --rojo: #e74c3c;           /* botón eliminar */
+    --rojo-oscuro: #c0392b;    /* hover del botón eliminar */
+    --gris-bg: #f5f5f5;        /* fondo de la sección carrito */
+    --gris-borde: #e0e0e0;     /* borde de cards y separadores */
+    --texto: #333;             /* color de texto principal */
+    --texto-claro: #fff;       /* texto blanco (sobre header) */
+    --radio: 8px;              /* border-radius general */
+}
+
+/* ============================================
+   RESET BÁSICO
+   ============================================
+   Quitamos márgenes y paddings por defecto que distintos navegadores
+   aplican de forma inconsistente. box-sizing: border-box es prácticamente
+   obligatorio en cualquier proyecto moderno. */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--texto);
+    background: #fff;
+}
+
+/* Utility class para ocultar cualquier elemento. La usamos desde JS con
+   classList.add/remove en el botón "Vaciar carrito" (EJ 9). */
+.hidden {
+    display: none !important;
+}
+
+/* ============================================
+   HEADER
+   ============================================
+   Usamos flexbox para distribuir: logo, nombre, buscador, carrito en
+   una sola fila. justify-content: space-between los separa con el
+   espacio disponible entre cada uno. */
+.header {
+    background: var(--verde);
+    color: var(--texto-claro);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;            /* en mobile baja a varias filas si no entra */
+}
+
+/* El <a> envolvente del logo: quitamos el subrayado y el color de link */
+.header a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.logo {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.nombreAlumno {
+    font-size: 0.95rem;
+}
+
+.barra-busqueda {
+    padding: 6px 10px;
+    border: none;
+    border-radius: var(--radio);
+    font-size: 0.9rem;
+    min-width: 200px;
+}
+
+.carrito span {
+    font-size: 0.95rem;
+}
+
+/* ============================================
+   SECCIÓN PRODUCTOS
+   ============================================
+   El título centrado, los botones de orden en una fila, y las cards
+   en grilla responsiva (auto-fill + minmax). */
+.seccion-productos {
+    padding: 24px;
+}
+
+.seccion-productos h2 {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+/* Controles de orden (EJ 8): los 4 botones en una fila centrada. */
+.controles-orden {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.controles-orden button {
+    padding: 6px 12px;
+    border: 1px solid var(--gris-borde);
+    background: #fff;
+    border-radius: var(--radio);
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.2s;
+}
+
+.controles-orden button:hover {
+    background: var(--gris-bg);
+}
+
+/* GRILLA DE PRODUCTOS
+   --------------------
+   repeat(auto-fill, minmax(150px, 1fr)):
+   - auto-fill: mete tantas columnas como entren.
+   - minmax(150px, 1fr): cada columna mide entre 150px y 1fr (parte igual).
+   Resultado: la grilla se adapta sola al ancho sin necesidad de media queries. */
+.contenedor-productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+}
+
+/* CARD DE PRODUCTO */
+.card-producto {
+    background: #fff;
+    border: 1px solid var(--gris-borde);
+    border-radius: var(--radio);
+    padding: 12px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-producto img {
+    width: 100%;
+    height: 100px;
+    object-fit: contain;        /* la imagen se ajusta sin deformarse */
+}
+
+.card-producto h3 {
+    font-size: 1rem;
+    margin: 4px 0;
+}
+
+.card-producto p {
+    color: var(--texto);
+    font-size: 0.9rem;
+}
+
+.card-producto button {
+    margin-top: auto;           /* empuja el botón al fondo de la card */
+    padding: 6px 10px;
+    background: var(--verde);
+    color: var(--texto-claro);
+    border: none;
+    border-radius: var(--radio);
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background 0.2s;
+}
+
+.card-producto button:hover {
+    background: var(--verde-oscuro);
+}
+
+/* ============================================
+   SECCIÓN CARRITO
+   ============================================
+   Fondo gris claro y separación del resto. */
+.seccion-carrito {
+    background: var(--gris-bg);
+    padding: 24px;
+    margin-top: 24px;
+}
+
+.seccion-carrito h2 {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+/* Lista de items del carrito (sin viñetas) */
+#items-carrito ul {
+    list-style: none;
+    max-width: 700px;
+    margin: 0 auto;             /* centra el bloque horizontalmente */
+}
+
+/* Cada item: nombre a la izq, controles +/- al centro, eliminar a la der */
+.bloque-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--gris-borde);
+}
+
+.nombre-item {
+    flex: 1;                    /* ocupa todo el espacio disponible */
+}
+
+/* Controles de cantidad (botones - y + con el número en el medio) */
+.control-cantidad {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.control-cantidad button {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--gris-borde);
+    background: #fff;
+    border-radius: var(--radio);
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.control-cantidad button:hover {
+    background: var(--gris-borde);
+}
+
+.control-cantidad .cantidad {
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Botón eliminar (rojo) */
+.boton-eliminar {
+    padding: 6px 14px;
+    background: var(--rojo);
+    color: var(--texto-claro);
+    border: none;
+    border-radius: var(--radio);
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.2s;
+}
+
+.boton-eliminar:hover {
+    background: var(--rojo-oscuro);
+}
+
+/* Estado vacío del carrito (EJ 9): emoji grande + mensaje, centrado */
+.carrito-vacio {
+    text-align: center;
+    padding: 32px 0;
+    color: #666;
+}
+
+.icono-carrito-vacio {
+    font-size: 3rem;
+    margin-bottom: 8px;
+}
+
+/* Total + botón vaciar: alineados a la derecha */
+.total-carrito {
+    max-width: 700px;
+    margin: 16px auto 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 16px;
+}
+
+.total-carrito p {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+#btn-vaciar {
+    padding: 6px 14px;
+    background: var(--rojo);
+    color: var(--texto-claro);
+    border: none;
+    border-radius: var(--radio);
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.2s;
+}
+
+#btn-vaciar:hover {
+    background: var(--rojo-oscuro);
+}
+
+/* ============================================
+   EXTRA — Botón "Realizar pedido" + Dialog/Ticket
+   ============================================ */
+
+/* Botón realizar pedido (verde como la marca) */
+#btn-realizar-pedido {
+    padding: 6px 14px;
+    background: var(--verde);
+    color: var(--texto-claro);
+    border: none;
+    border-radius: var(--radio);
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.2s;
+}
+
+#btn-realizar-pedido:hover {
+    background: var(--verde-oscuro);
+}
+
+/* Dialog HTML5: por defecto viene sin estilos. Le damos forma */
+#dialog-ticket {
+    border: none;
+    border-radius: var(--radio);
+    padding: 24px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* ::backdrop es el fondo detrás del dialog (solo funciona con <dialog>) */
+#dialog-ticket::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* El "ticket" en sí: estilo recibo de impresora */
+.ticket {
+    font-family: 'Courier New', Courier, monospace;  /* monoespaciada como un ticket */
+    text-align: center;
+    color: var(--texto);
+}
+
+.ticket-titulo {
+    margin-bottom: 12px;
+    font-size: 1.2rem;
+}
+
+.ticket-pedido-id {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.ticket hr {
+    border: none;
+    border-top: 1px dashed var(--gris-borde);
+    margin: 12px 0;
+}
+
+/* Lista de items del ticket: cada línea con nombre y precio alineados */
+.ticket-items {
+    list-style: none;
+    text-align: left;
+}
+
+.ticket-linea {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 0;
+}
+
+.ticket-total {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-top: 8px;
+}
+
+.ticket-gracias {
+    margin-top: 12px;
+    font-style: italic;
+    color: #666;
+}
+
+/* Botón cerrar del dialog */
+#btn-cerrar-ticket {
+    margin-top: 16px;
+    padding: 8px 20px;
+    background: var(--verde);
+    color: var(--texto-claro);
+    border: none;
+    border-radius: var(--radio);
+    cursor: pointer;
+    width: 100%;
+}
+
+#btn-cerrar-ticket:hover {
+    background: var(--verde-oscuro);
+}
+
+/* ============================================
+   EXTRA — Historial de pedidos
+   ============================================ */
+
+/* Botón "Mis pedidos" en el header */
+#btn-historial {
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--texto-claro);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: var(--radio);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+#btn-historial:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Dialog del historial */
+#dialog-historial {
+    border: none;
+    border-radius: var(--radio);
+    padding: 24px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;            /* no más alto que 80% de la ventana */
+    overflow-y: auto;             /* scroll si hay muchos pedidos */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+#dialog-historial::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.dialog-titulo {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.historial-vacio {
+    text-align: center;
+    padding: 32px 0;
+    color: #666;
+    font-style: italic;
+}
+
+/* Una fila del historial (un pedido) */
+.pedido-historial {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px;
+    border-bottom: 1px solid var(--gris-borde);
+}
+
+.pedido-info strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.pedido-fecha {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.pedido-info p {
+    font-size: 0.9rem;
+}
+
+/* Botones de acciones de cada pedido */
+.pedido-acciones {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.pedido-acciones button {
+    padding: 6px 10px;
+    border: 1px solid var(--gris-borde);
+    background: #fff;
+    border-radius: var(--radio);
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background 0.2s;
+}
+
+.pedido-acciones button:hover {
+    background: var(--gris-bg);
+}
+
+/* El botón "Eliminar" del historial es rojo, reusa la clase boton-eliminar */
+.pedido-acciones .boton-eliminar {
+    background: var(--rojo);
+    color: var(--texto-claro);
+    border-color: var(--rojo);
+}
+
+.pedido-acciones .boton-eliminar:hover {
+    background: var(--rojo-oscuro);
+}
+
+#btn-cerrar-historial {
+    display: block;
+    width: 100%;
+    margin-top: 16px;
+    padding: 8px 20px;
+    background: var(--verde);
+    color: var(--texto-claro);
+    border: none;
+    border-radius: var(--radio);
+    cursor: pointer;
+}
+
+#btn-cerrar-historial:hover {
+    background: var(--verde-oscuro);
+}
+
+/* ============================================
+   RESPONSIVE: ajustes para pantallas chicas
+   ============================================
+   En mobile (< 600px), el header se apila en columnas para que entre. */
+@media (max-width: 600px) {
+    .header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .barra-busqueda {
+        width: 100%;
+    }
+
+    .bloque-item {
+        flex-wrap: wrap;        /* los controles bajan a otra fila si no entra */
+    }
+}
